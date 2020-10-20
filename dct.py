@@ -2,6 +2,8 @@ import numpy as np
 import math
 import matplotlib.pyplot as plt
 import matplotlib.image as im
+import scipy.fftpack as fftp
+import visualizations as vz
 
 pi = math.pi
 
@@ -14,7 +16,8 @@ def fDCT(image, onb):
 def compress_image_DCT(image, thresh, onb):
     out = np.zeros(image.shape)
     for n in range(image.shape[2]):
-        im_c = fDCT(image[:, :, n], onb)
+        im_c = iDCT(image[:, :, n], onb)
+        # im_c = fftp.dctn(image[:, :, n], norm='ortho')
         im_c[(im_c ** 2) ** 0.5 < thresh] = 0
         out[:, :, n] = im_c
     return out
@@ -28,7 +31,8 @@ def iDCT(compressed_image, onb):
 def decompress_image_DCT(compressed_image, onb):
     out = np.zeros(compressed_image.shape)
     for n in range(compressed_image.shape[2]):
-        out[:, :, n] = iDCT(compressed_image[:, :, n], onb)
+        out[:, :, n] = fDCT(compressed_image[:, :, n], onb)
+        # out[:, :, n] = fftp.idctn(compressed_image[:, :, n], norm='ortho')
     return out
 
 
@@ -44,14 +48,6 @@ def create_onb(N):
     return d
 
 
-def show_onb(dk):
-
-    print(dk.shape)
-    x = np.arange(dk.shape[0])
-    plt.stem(x, dk)
-    plt.show()
-
-
 def show_compression(image, t):
     onb = create_onb(image.shape[0])
     x = compress_image_DCT(image, t, onb)
@@ -65,4 +61,4 @@ def show_compression(image, t):
     plt.show()
 
 
-show_compression(im.imread('test_images/richb8.png'), 0.01)
+show_compression(im.imread('test_images/richb8.png'), 0.00)
