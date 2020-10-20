@@ -81,7 +81,7 @@ def show_compression(image, t):
 def show_block_compression(image, t, blk_sz):
     onb = create_onb(blk_sz)
     x = block_compress(image, t, onb, blk_sz)
-    y = block_decompress(x, onb.conjugate(), blk_sz)
+    y = block_decompress(x, np.linalg.inv(onb), blk_sz)
     plt.subplot(121)
     plt.title("Original image")
     plt.imshow(image, interpolation='nearest', cmap='gray')
