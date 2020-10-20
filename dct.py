@@ -48,6 +48,23 @@ def create_onb(N):
     return d
 
 
+def block_compress(image, thresh, onb, blk_size):
+    out = np.zeros(image.shape)
+    for i in range(0,  image.shape[0] - blk_size, blk_size):
+        for j in range(0,image.shape[1] - blk_size, blk_size):
+            out[i:i+blk_size, j:j+blk_size, :] = compress_image_DCT(image[i:i+blk_size, j:j+blk_size, :], thresh, onb)
+
+    return out
+
+
+def block_decompress(image, onb, blk_size):
+    out = np.zeros(image.shape)
+    for i in range(0, image.shape[0] - blk_size, blk_size):
+        for j in range(0, image.shape[1] - blk_size, blk_size):
+            out[i:i + blk_size, j:j + blk_size, :] = decompress_image_DCT(image[i:i+blk_size, j:j+blk_size, :], onb)
+    return out
+
+
 def show_compression(image, t):
     onb = create_onb(image.shape[0])
     x = compress_image_DCT(image, t, onb)
@@ -61,4 +78,17 @@ def show_compression(image, t):
     plt.show()
 
 
-show_compression(im.imread('test_images/richb8.png'), 0.00)
+def show_block_compression(image, t, blk_sz):
+    onb = create_onb(blk_sz)
+    x = block_compress(image, t, onb, blk_sz)
+    y = block_decompress(x, onb.conjugate(), blk_sz)
+    plt.subplot(121)
+    plt.title("Original image")
+    plt.imshow(image, interpolation='nearest', cmap='gray')
+    plt.subplot(122)
+    plt.title("Image after compression with threshold = " + str(t))
+    plt.imshow(y, interpolation='nearest', cmap='gray')
+    plt.show()
+
+
+show_block_compression(im.imread('test_images/richb8.png'), 0.00, 8)
