@@ -1,6 +1,6 @@
-function filter =  edgePass(percent, imgsize)
+function filter =  edgePass(percent1,percent2, imgsize)
     filter = ones(imgsize);
-    middle = zeros(uint16(imgsize.*[percent,percent]));
+    middle = zeros(uint16(imgsize.*[percent1,percent2]));
     middlesize = size(middle);
     edge11 = uint16((imgsize(1)-middlesize(1))/2);
     edge12 = edge11+middlesize(1)-1;
