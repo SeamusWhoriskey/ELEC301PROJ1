@@ -1,0 +1,25 @@
+function  compareOnDataset(ogimgs,imgs,vars)
+    
+    edgePercent = 0.87;
+    cornerpercent = 0.65;
+    plusPercentMinor = 0.65;
+    plusPercentMajor = .995;
+    numimgs = length(ogimgs);
+    numvars = length(vars);
+    normalized_congregate_mse = zeros([1 3]);
+    normalized_mse = zeros([numvars*numimgs 3]);
+    for i = 1:numimgs
+       ogimg = ogimgs{i};
+       varimgs = imgs{i};
+       for j = 1:numvars
+           img = varimgs{j};
+           mses = compare_MSE(edgePercent,cornerpercent,plusPercentMajor,plusPercentMinor,img,ogimg);
+           mses = mses./mses(1);
+           normalized_congregate_mse = normalized_congregate_mse+mses(2:4);
+           normalized_mse((numvars*(i-1))+j,:) = mses(2:4);
+       end
+    end
+    normalized_congregate_mse = normalized_congregate_mse./(numimgs*numvars)
+    normalized_mse
+end
+

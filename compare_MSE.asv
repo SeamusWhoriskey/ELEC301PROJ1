@@ -1,0 +1,13 @@
+function output = compare_MSE(edgepercent,cornerpercent,pluspercentmajor,pluspercentminor,img,ogimg)
+    imgsize = size(img);
+    pixels = imgsize(1)*imgsize(2);
+    edgePImg = dftfilter(edgePass(edgepercent,edgepercent,imgsize),img);
+    cornerPImg = dftfilter(cornerPass(percent1,imgsize),img);
+    plusBImg = dftfilter(plusBlock(percent2,percent1,imgsize),img);
+    noneMSE = mse(img,ogimg);
+    edgePMSE = mse(edgePImg,ogimg);
+    cornerPMSE = mse(cornerPImg,ogimg);
+    plusBMSE = mse(plusBImg,ogimg);
+    output = [noneMSE,edgePMSE,cornerPMSE,plusBMSE];
+end
+

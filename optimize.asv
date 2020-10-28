@@ -1,0 +1,22 @@
+function  optimize(ogimgs,imgs,vars)
+    points = 10;
+    percents = linspace(0,.99,points);
+    numimgs = length(ogimgs);
+    numvars = length(vars);
+    normalized_congregate_mse = zeros([points,3]);
+    for i = 1:numimgs
+       ogimg = ogimgs{i};
+       varimgs = imgs{i};
+       for j = 1:numvars
+           img = varimgs{j};
+           for k = 1:points
+              mses = compare_MSE(percents(k),.95,img,ogimg);
+              mses = mses./mses(1);
+              normalized_congregate_mse(k,:) = normalized_congregate_mse(k,:)+mses(2:4);
+           end
+       end
+    end
+    plot(percents,normalized_congregate_mse')
+    legend('edgePass','cornerPass
+end
+
